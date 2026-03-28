@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNBOUND Collective — Merch</title>
+    <meta name="description" content="Official UNBOUND Collective merchandise. Premium garment-dyed apparel for the conscious community.">
+    <meta property="og:title" content="UNBOUND Collective — Merch">
+    <meta property="og:description" content="Official UNBOUND Collective merchandise.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/logo-icon.png">
+    <link rel="icon" type="image/png" href="assets/logo-icon.png">
+    <link rel="apple-touch-icon" href="assets/logo-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Forum&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ===== MERCH PAGE SPECIFIC STYLES ===== */
+        .merch-hero {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 140px;
+        }
+        .merch-hero .section-bg-photo {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
+        }
+        .merch-hero .section-bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(1,0,2,0.9) 0%, rgba(1,0,2,0.5) 50%, rgba(1,0,2,0.95) 100%);
+        }
+        .merch-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        .merch-hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            letter-spacing: 0.04em;
+        }
+        .merch-hero p {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Product Grid */
+        .products-section {
+            padding: 80px 0 100px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .product-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(237, 208, 168, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        /* Image Gallery */
+        .product-gallery {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: #111;
+        }
+        .product-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .product-gallery img.active {
+            opacity: 1;
+        }
+        .gallery-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 3;
+        }
+        .gallery-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+            padding: 0;
+        }
+        .gallery-dot.active {
+            background: var(--gold);
+        }
+        .gallery-arrows {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .gallery-arrow {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(237,208,168,0.15);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: all;
+            transition: background 0.3s;
+            opacity: 0;
+        }
+        .product-card:hover .gallery-arrow {
+            opacity: 1;
+        }
+        .gallery-arrow:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        /* Product Info */
+        .product-info {
+            padding: 28px 24px 32px;
+        }
+        .product-label {
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .product-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .product-price {
+            font-family: var(--font-body);
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+        .product-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .color-swatches {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .color-swatch {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .color-swatch.active,
+        .color-swatch:hover {
+            border-color: var(--gold);
+            transform: scale(1.15);
+        }
+
+        /* Back to home */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gold);
+            text-decoration: none;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            transition: opacity 0.3s;
+        }
+        .back-link:hover {
+            opacity: 0.7;
+        }
+
+        /* Coming soon overlay */
+        .coming-soon-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4E136D 0%, #D80057 100%);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .merch-hero {
+                padding-top: 120px;
+                min-height: 40vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVIGATION BAR ===== -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo-full.png" alt="UNBOUND Collective" class="logo-img">
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#about" class="nav-link">About Us</a></li>
+                <li><a href="index.html#offerings" class="nav-link">Our Offerings</a></li>
+                <li><a href="index.html#events" class="nav-link">Events</a></li>
+                <li><a href="index.html#membership" class="nav-link">Membership</a></li>
+                <li><a href="https://community.unboundcollective.io" class="nav-link" target="_blank">Community</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <a href="https://community.unboundcollective.io" class="nav-cta" target="_blank">Join Now</a>
+        </div>
+    </nav>
+
+    <!-- ===== MERCH HERO ===== -->
+    <section class="merch-hero">
+        <img src="assets/photo-shibari-bw.jpg" alt="" class="section-bg-photo">
+        <div class="section-bg-overlay"></div>
+        <div class="container">
+            <span class="section-label">OFFICIAL MERCHANDISE</span>
+            <h1>UNBOUND Merch</h1>
+            <p>Premium garment-dyed apparel for the conscious community. Wear your liberation.</p>
+        </div>
+    </section>
+
+    <!-- ===== PRODUCTS ===== -->
+    <section class="products-section">
+        <div class="container">
+            <a href="index.html" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,4 7,12 15,20"/></svg>
+                Back to Home
+            </a>
+
+            <div class="product-grid">
+
+                <!-- PRODUCT 1: Color 1 (default) -->
+                <div class="product-card">
+                    <div class="product-gallery" data-product="tshirt-1">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/73207/98445/unisex-garment-dyed-t-shirt.jpg?camera_label=front" alt="UNBOUND T-Shirt Front" class="active">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/73207/98446/unisex-garment-dyed-t-shirt.jpg?camera_label=back" alt="UNBOUND T-Shirt Back">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/73207/112433/unisex-garment-dyed-t-shirt.jpg?camera_label=person-1-front" alt="UNBOUND T-Shirt Model">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/73207/100629/unisex-garment-dyed-t-shirt.jpg?camera_label=folded" alt="UNBOUND T-Shirt Folded">
+                        <div class="gallery-arrows">
+                            <button class="gallery-arrow gallery-prev" aria-label="Previous image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,4 7,12 15,20"/></svg>
+                            </button>
+                            <button class="gallery-arrow gallery-next" aria-label="Next image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,4 17,12 9,20"/></svg>
+                            </button>
+                        </div>
+                        <div class="gallery-dots">
+                            <button class="gallery-dot active" data-index="0"></button>
+                            <button class="gallery-dot" data-index="1"></button>
+                            <button class="gallery-dot" data-index="2"></button>
+                            <button class="gallery-dot" data-index="3"></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-label">UNBOUND APPAREL</span>
+                        <h3 class="product-title">UNBOUND Garment-Dyed Tee</h3>
+                        <div class="product-price">From $20.68</div>
+                        <p class="product-description">Premium Comfort Colors 1717 garment-dyed tee. Soft, lived-in feel with a relaxed fit. 100% ring-spun cotton.</p>
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <br><br>
+                        <a href="#contact-merch" class="btn btn-outline">Notify Me</a>
+                    </div>
+                </div>
+
+                <!-- PRODUCT 1: Color 2 -->
+                <div class="product-card">
+                    <div class="product-gallery" data-product="tshirt-2">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/79048/98445/unisex-garment-dyed-t-shirt.jpg?camera_label=front" alt="UNBOUND T-Shirt Front" class="active">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/79048/98446/unisex-garment-dyed-t-shirt.jpg?camera_label=back" alt="UNBOUND T-Shirt Back">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/79048/112433/unisex-garment-dyed-t-shirt.jpg?camera_label=person-1-front" alt="UNBOUND T-Shirt Model">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/79048/100629/unisex-garment-dyed-t-shirt.jpg?camera_label=folded" alt="UNBOUND T-Shirt Folded">
+                        <div class="gallery-arrows">
+                            <button class="gallery-arrow gallery-prev" aria-label="Previous image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,4 7,12 15,20"/></svg>
+                            </button>
+                            <button class="gallery-arrow gallery-next" aria-label="Next image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,4 17,12 9,20"/></svg>
+                            </button>
+                        </div>
+                        <div class="gallery-dots">
+                            <button class="gallery-dot active" data-index="0"></button>
+                            <button class="gallery-dot" data-index="1"></button>
+                            <button class="gallery-dot" data-index="2"></button>
+                            <button class="gallery-dot" data-index="3"></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-label">UNBOUND APPAREL</span>
+                        <h3 class="product-title">UNBOUND Garment-Dyed Tee</h3>
+                        <div class="product-price">From $20.68</div>
+                        <p class="product-description">Premium Comfort Colors 1717 garment-dyed tee. Soft, lived-in feel with a relaxed fit. 100% ring-spun cotton.</p>
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <br><br>
+                        <a href="#contact-merch" class="btn btn-outline">Notify Me</a>
+                    </div>
+                </div>
+
+                <!-- PRODUCT 1: Color 3 -->
+                <div class="product-card">
+                    <div class="product-gallery" data-product="tshirt-3">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/78963/98445/unisex-garment-dyed-t-shirt.jpg?camera_label=front" alt="UNBOUND T-Shirt Front" class="active">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/78963/98446/unisex-garment-dyed-t-shirt.jpg?camera_label=back" alt="UNBOUND T-Shirt Back">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/78963/112433/unisex-garment-dyed-t-shirt.jpg?camera_label=person-1-front" alt="UNBOUND T-Shirt Model">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/78963/100629/unisex-garment-dyed-t-shirt.jpg?camera_label=folded" alt="UNBOUND T-Shirt Folded">
+                        <div class="gallery-arrows">
+                            <button class="gallery-arrow gallery-prev" aria-label="Previous image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,4 7,12 15,20"/></svg>
+                            </button>
+                            <button class="gallery-arrow gallery-next" aria-label="Next image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,4 17,12 9,20"/></svg>
+                            </button>
+                        </div>
+                        <div class="gallery-dots">
+                            <button class="gallery-dot active" data-index="0"></button>
+                            <button class="gallery-dot" data-index="1"></button>
+                            <button class="gallery-dot" data-index="2"></button>
+                            <button class="gallery-dot" data-index="3"></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-label">UNBOUND APPAREL</span>
+                        <h3 class="product-title">UNBOUND Garment-Dyed Tee</h3>
+                        <div class="product-price">From $20.68</div>
+                        <p class="product-description">Premium Comfort Colors 1717 garment-dyed tee. Soft, lived-in feel with a relaxed fit. 100% ring-spun cotton.</p>
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <br><br>
+                        <a href="#contact-merch" class="btn btn-outline">Notify Me</a>
+                    </div>
+                </div>
+
+                <!-- PRODUCT 1: Color 4 -->
+                <div class="product-card">
+                    <div class="product-gallery" data-product="tshirt-4">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/78958/98445/unisex-garment-dyed-t-shirt.jpg?camera_label=front" alt="UNBOUND T-Shirt Front" class="active">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/78958/98446/unisex-garment-dyed-t-shirt.jpg?camera_label=back" alt="UNBOUND T-Shirt Back">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/78958/112433/unisex-garment-dyed-t-shirt.jpg?camera_label=person-1-front" alt="UNBOUND T-Shirt Model">
+                        <img src="https://images-api.printify.com/mockup/69c85ca48ac9a0544a0ee8f2/78958/100629/unisex-garment-dyed-t-shirt.jpg?camera_label=folded" alt="UNBOUND T-Shirt Folded">
+                        <div class="gallery-arrows">
+                            <button class="gallery-arrow gallery-prev" aria-label="Previous image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,4 7,12 15,20"/></svg>
+                            </button>
+                            <button class="gallery-arrow gallery-next" aria-label="Next image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,4 17,12 9,20"/></svg>
+                            </button>
+                        </div>
+                        <div class="gallery-dots">
+                            <button class="gallery-dot active" data-index="0"></button>
+                            <button class="gallery-dot" data-index="1"></button>
+                            <button class="gallery-dot" data-index="2"></button>
+                            <button class="gallery-dot" data-index="3"></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-label">UNBOUND APPAREL</span>
+                        <h3 class="product-title">UNBOUND Garment-Dyed Tee</h3>
+                        <div class="product-price">From $20.68</div>
+                        <p class="product-description">Premium Comfort Colors 1717 garment-dyed tee. Soft, lived-in feel with a relaxed fit. 100% ring-spun cotton.</p>
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <br><br>
+                        <a href="#contact-merch" class="btn btn-outline">Notify Me</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== NOTIFY ME / CONTACT ===== -->
+    <section class="section" id="contact-merch" style="padding: 60px 0 100px;">
+        <div class="container" style="max-width: 600px; text-align: center;">
+            <span class="section-label">STAY IN THE LOOP</span>
+            <h2 class="section-title" style="margin-bottom: 16px;">Get Notified When We Launch</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 32px;">Be the first to know when our merch drop goes live. Enter your email below.</p>
+            <form class="newsletter-input-group" action="#mailerlite-form" method="POST" style="max-width: 480px; margin: 0 auto;">
+                <input type="email" placeholder="Enter your email address" required aria-label="Email address">
+                <button type="submit" class="btn btn-primary">Notify Me</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2026 UNBOUND Collective. All rights reserved. <a href="index.html" style="color: var(--gold); text-decoration: none;">Return to Home</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // ===== Product Gallery Navigation =====
+    document.querySelectorAll('.product-gallery').forEach(gallery => {
+        const images = gallery.querySelectorAll('img');
+        const dots = gallery.querySelectorAll('.gallery-dot');
+        const prevBtn = gallery.querySelector('.gallery-prev');
+        const nextBtn = gallery.querySelector('.gallery-next');
+        let current = 0;
+
+        function showImage(index) {
+            images.forEach(img => img.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            current = (index + images.length) % images.length;
+            images[current].classList.add('active');
+            dots[current].classList.add('active');
+        }
+
+        prevBtn.addEventListener('click', () => showImage(current - 1));
+        nextBtn.addEventListener('click', () => showImage(current + 1));
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => showImage(parseInt(dot.dataset.index)));
+        });
+    });
+
+    // ===== Mobile Nav Toggle =====
+    const navToggle = document.getElementById('navToggle');
+    const navMenu = document.getElementById('navMenu');
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            navToggle.classList.toggle('active');
+        });
+    }
+    </script>
+
+</body>
+</html>
